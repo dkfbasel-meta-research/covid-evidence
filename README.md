@@ -11,12 +11,12 @@ We provide information about worldwide planned, ongoing, and completed randomize
    * [The Details](#the-details)
    * [The Updates](#the-updates)
 * [Publications and Projects](#publications-and-projects)
-   * [Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19](#)
-   * [Analysis of the COVID-19 research agenda in Germany](#)
-   * [Hydroxychloroquine/chloroquine collaborative review](#)
-   * [Convalescent plasma collaborative review](#)
-   * [The first 100 days of the clinical research response to COVID-19](#)
-   * [The fate of randomized clinical trials registered in the first 100 days](#)
+   * [Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19](#trials-assessing-non-pharmaceutical-interventions-npis-to-prevent-covid-19)
+   * [Analysis of the COVID-19 research agenda in Germany](#analysis-of-the-covid19-research-agenda-in-germany)
+   * [Hydroxychloroquine/chloroquine collaborative review](#hydroxychloroquinechloroquine-collaborative-review)
+   * [Convalescent plasma collaborative review](#convalescent-plasma-collaborative-review)
+   * [The first 100 days of the clinical research response to COVID-19](#the-first-100-days-of-the-clinical-research-response-to-covid-19)
+   * [The fate of randomized clinical trials registered in the first 100 days](#the-fate-of-randomized-clinical-trials-registered-in-the-first-100-days)
 * [Frequently Asked Questions](#frequently-asked-questions)
    * [What is COVID-evidence BASIC?](#what-is-covid-evidence-basic)
    * [What is the data flow?](#what-is-the-data-flow)
@@ -223,4 +223,4 @@ This is a non-profit initiative. The project is funded by the [Swiss National Sc
 If you are interested in contributing to this project, please send an email to [lars.hemkens@usb.ch](mailto:lars.hemkens@usb.ch).
 
 ## License
-covid-evidence updater is MIT-licensed.
+The source code of covid-evidence updater is MIT-licensed.
