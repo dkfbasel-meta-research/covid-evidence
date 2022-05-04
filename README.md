@@ -3,6 +3,8 @@
 
 We provide information about worldwide planned, ongoing, and completed randomized controlled trials on any intervention to treat or prevent SARS-CoV-2-infections.
 
+This repository provides the source code to setup and update the COVID-evidence database.
+
 ## Table of contents
 
 * [Project](#resources)
@@ -10,6 +12,11 @@ We provide information about worldwide planned, ongoing, and completed randomize
    * [The Evidence](#the-evidence)
    * [The Details](#the-details)
    * [The Updates](#the-updates)
+* [Setup COVID-evidence Basic](#setup-covid-evidence-basic)
+   * [Requirements](#requirements)
+   * [Building cove-updater](#building-cove-updater)
+   * [Download source files](#download-source-files)
+   * [Update database](#update-database)
 * [Publications and Projects](#publications-and-projects)
    * [Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19](#trials-assessing-non-pharmaceutical-interventions-npis-to-prevent-covid-19)
    * [Analysis of the COVID-19 research agenda in Germany](#analysis-of-the-covid19-research-agenda-in-germany)
@@ -51,6 +58,12 @@ Trial information that is not included in these sources may also be added to COV
 
 ### The Updates
 The COVID-evidence database now focuses on reporting key characteristics of randomized controlled trials such as status, design features, the clinical question (i.e. the population, compared interventions, key outcomes), and setting. We are using the COVID-evidence database as a collaborative platform to foster evidence generation (Publications/Projects).
+
+## Setup COVID-evidence Basic
+### Requirements
+### Building cove-updater
+### Download source files
+### Update database
 
 ## Publications and Projects
 ### Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19
