@@ -7,30 +7,42 @@ This repository provides the source code to setup and update the COVID-evidence 
 
 ## Table of contents
 
-* [Project](#resources)
-   * [The Mission](#the-mission)
-   * [The Evidence](#the-evidence)
-   * [The Details](#the-details)
-   * [The Updates](#the-updates)
-* [Setup COVID-evidence Basic](#setup-covid-evidence-basic)
-   * [Requirements](#requirements)
-   * [Building cove-updater](#building-cove-updater)
-   * [Download source files](#download-source-files)
-   * [Update database](#update-database)
-* [Publications and Projects](#publications-and-projects)
-   * [Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19](#trials-assessing-non-pharmaceutical-interventions-npis-to-prevent-covid-19)
-   * [Analysis of the COVID-19 research agenda in Germany](#analysis-of-the-covid19-research-agenda-in-germany)
-   * [Hydroxychloroquine/chloroquine collaborative review](#hydroxychloroquinechloroquine-collaborative-review)
-   * [Convalescent plasma collaborative review](#convalescent-plasma-collaborative-review)
-   * [The first 100 days of the clinical research response to COVID-19](#the-first-100-days-of-the-clinical-research-response-to-covid-19)
-   * [The fate of randomized clinical trials registered in the first 100 days](#the-fate-of-randomized-clinical-trials-registered-in-the-first-100-days)
-* [Frequently Asked Questions](#frequently-asked-questions)
-   * [What is COVID-evidence BASIC?](#what-is-covid-evidence-basic)
-   * [What is the data flow?](#what-is-the-data-flow)
-   * [How reliable are filters?](#how-reliable-are-filters)
-   * [What are “Expansion Modules”?](#what-are-espansion-modules)
-   * [Do you share your data?](#do-you-share-your-data)
-* [License](#license)
+- [COVID-evidence](#covid-evidence)
+  - [Table of contents](#table-of-contents)
+  - [Project](#project)
+    - [The Mission](#the-mission)
+    - [The Evidence](#the-evidence)
+    - [The Details](#the-details)
+    - [The Updates](#the-updates)
+  - [Setup COVID-evidence Basic](#setup-covid-evidence-basic)
+    - [Requirements](#requirements)
+    - [Setup MySQL with Docker](#setup-mysql-with-docker)
+    - [Building cove-updater](#building-cove-updater)
+    - [Setup database structure](#setup-database-structure)
+    - [Download source files](#download-source-files)
+    - [Update database](#update-database)
+          - [Update of all data sources](#update-of-all-data-sources)
+          - [Command line arguments](#command-line-arguments)
+  - [Publications and Projects](#publications-and-projects)
+    - [Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19](#trials-assessing-non-pharmaceutical-interventions-npis-to-prevent-covid-19)
+    - [Analysis of the COVID-19 research agenda in Germany](#analysis-of-the-covid-19-research-agenda-in-germany)
+    - [Hydroxychloroquine/chloroquine collaborative review](#hydroxychloroquinechloroquine-collaborative-review)
+    - [Convalescent plasma collaborative review](#convalescent-plasma-collaborative-review)
+    - [The first 100 days of the clinical research response to COVID-19](#the-first-100-days-of-the-clinical-research-response-to-covid-19)
+    - [The fate of randomized clinical trials registered in the first 100 days](#the-fate-of-randomized-clinical-trials-registered-in-the-first-100-days)
+  - [Frequently Asked Questions](#frequently-asked-questions)
+    - [What is COVID-evidence BASIC?](#what-is-covid-evidence-basic)
+    - [What is the data flow?](#what-is-the-data-flow)
+    - [How reliable are filters?](#how-reliable-are-filters)
+    - [What are “Expansion Modules”?](#what-are-expansion-modules)
+    - [Do you share your data?](#do-you-share-your-data)
+    - [How accurate is the data?](#how-accurate-is-the-data)
+    - [Do you work with other initiatives?](#do-you-work-with-other-initiatives)
+    - [What makes COVID-evidence different from other initiatives?](#what-makes-covid-evidence-different-from-other-initiatives)
+    - [Where do I find more details on COVID-evidence?](#where-do-i-find-more-details-on-covid-evidence)
+    - [Who is paying?](#who-is-paying)
+    - [How can I help?](#how-can-i-help)
+  - [License](#license)
 
 ## Project
 ### The Mission
@@ -61,9 +73,72 @@ The COVID-evidence database now focuses on reporting key characteristics of rand
 
 ## Setup COVID-evidence Basic
 ### Requirements
+The source code of the update utility is written in GO. To build the COVID-evidence update tool an installed [GO compiler](https://go.dev/doc/install) is required. A bash script is available for building the binary and a run script template is provided to start an update cicle. The update utility is only tested on macOS.
+The data of COVID-evidence is stored in a MySQL database (≥5.7).
+### Setup MySQL with Docker
+An easy way to run a MySQL database on a local machine is to use Docker.
+```
+# create a directory to persist data
+mkdir data
+
+# run mysql docker container publishing standard port 3306
+docker run -v "$PWD/data":/var/lib/mysql \
+--name mysql \
+-p 3306:3306 \
+-e MYSQL_ROOT_PASSWORD=secret_root_password \
+-e MYSQL_DATABASE=covid_evidence \
+-e MYSQL_USER=covid_evidence_admin \
+-e MYSQL_PASSWORD=secret_admin_password \
+-e MYSQL_PASSWORD=secret_admin_password \
+-d mysql:5.7 \
+--character-set-server=utf8mb4 \
+--collation-server=utf8mb4_unicode_ci
+```
 ### Building cove-updater
+The project provides a build script to compile the COVID-evidence update tool.
+```
+# change to the build directory
+cd build
+
+# compile the COVID-evidence updater
+./build.sh
+```
+### Setup database structure
+All tables that are used to import the data from the different sources, are provided as SQL scripts in the setup folder.
+```
+# copy the setup scripts into the mysql container
+docker cp setup mysql:/tmp/
+
+# run each setup script to create the basic database tables
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/01_cove_basic.sql'
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/02_screening_ictrp.sql'
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/03_screening_clinicaltrials.sql'
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/04_screening_love.sql'
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/05_screening_johnshopkins.sql'
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/06_screening_projects.sql'
+docker exec mysql /bin/sh 'mysql -u covid_evidence_admin --ppassword < /tmp/setup/06_screening_topics.sql'
+```
 ### Download source files
+To import the registry entries from the WHO ICTRP you need to download the provided CSV file from the [ICTRP Website](https://www.who.int/clinical-trials-registry-platform).
+For the import of the [L·OVE platform](https://iloveevidence.com/), you need a CSV file with the following fields:
+```
+reviewer_name, results_pub, title, abstract, author, publication_title, doi, registry, date_added, randomized
+```
 ### Update database
+It is possible to update the data of all sources together or to update a single data source e.g. WHO ICTRP.
+###### Update of all data sources
+```
+./build/bin/cove-updater -mysql="covid_evidence_admin:secret_admin_password@(127.0.0.1:3306)/covid_evidence" -tmp=./exports -ictrp=./imports/COVID19-web.csv -love=./imports/love.csv -ct -jh
+```
+###### Command line arguments
+| argument  | required | type | description |
+| --- | --- | --- | --- |
+| -mysql | Yes |string | MySQL connection string: user:password@(host:port)/database_name |
+| -tmp | Yes | string | Path to a temporary folder |
+| -ictrp | No | string | Path to the WHO ICTRP CSV file |
+| -love | No | string | Path to the love CSV file |
+| -ct | No | boolean | If the argument is set, the entries of clinicaltrials.org, wil be updated |
+| -jh | No | boolean | If the argument is set, the number of covid cases per country will be updted |
 
 ## Publications and Projects
 ### Trials assessing non-pharmaceutical interventions (NPIs) to prevent COVID-19
@@ -198,6 +273,7 @@ Entries included in COVID-evidence BASIC collection are further manually screene
 
 In the COVID-evidence database, entries and all related information are made publicly available.
 
+![Data Flow](images/2021-03-03-Data_flow-4.png)
 ### How reliable are filters?
 Filters provide a fast access related to users’ specific interests and in large majority are automatically populated based on information available in the database. The filters are designed to focus on trial characteristics and important clinical questions (topics). Filters on trial characteristics are based on automatic data extraction and processing. 
 
