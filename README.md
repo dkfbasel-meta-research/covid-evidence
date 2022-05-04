@@ -223,4 +223,4 @@ This is a non-profit initiative. The project is funded by the [Swiss National Sc
 If you are interested in contributing to this project, please send an email to [lars.hemkens@usb.ch](mailto:lars.hemkens@usb.ch).
 
 ## License
-fastText is MIT-licensed.
+covid-evidence updater is MIT-licensed.
